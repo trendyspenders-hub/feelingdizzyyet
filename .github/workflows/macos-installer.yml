@@ -1,0 +1,67 @@
+name: Build and sign Feeling Dizzy Yet Mac DMG
+on:
+  workflow_dispatch:
+    inputs:
+      release_mode:
+        description: 'Apple credentials are required for signed-notarized'
+        required: true
+        default: unsigned-preview
+        type: choice
+        options: [unsigned-preview, signed-notarized]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/macos-installer.yml'
+      - 'macos/**'
+      - 'scripts/Build-Mac.sh'
+      - 'scripts/Release-Mac.sh'
+      - 'source/**'
+      - 'packages/**'
+      - 'build-config.json'
+permissions:
+  contents: read
+concurrency:
+  group: fdy-macos-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  mac-dmg:
+    runs-on: macos-14
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build universal native installer and test copy/rollback
+        run: bash scripts/Build-Mac.sh
+      - name: Create clearly labelled unsigned preview
+        if: github.event.inputs.release_mode != 'signed-notarized'
+        env:
+          RELEASE_MODE: unsigned-preview
+        run: bash scripts/Release-Mac.sh
+      - name: Sign with Developer ID and notarize with Apple
+        if: github.event.inputs.release_mode == 'signed-notarized'
+        env:
+          RELEASE_MODE: signed-notarized
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: bash scripts/Release-Mac.sh
+      - name: Upload successful DMG
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeelingDizzyYet-Mac-${{ github.event.inputs.release_mode || 'unsigned-preview' }}-${{ github.run_number }}
+          path: dist/mac/*
+          retention-days: 14
+          if-no-files-found: error
+      - name: Preserve test and notarization diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeelingDizzyYet-Mac-logs-${{ github.run_number }}
+          path: build/mac/logs/*
+          retention-days: 14
+          if-no-files-found: warn
