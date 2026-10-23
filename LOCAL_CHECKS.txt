@@ -1,0 +1,6 @@
+PASS source archive checksum/integrity and required runtime files
+PASS workflow YAML, Windows runner, restricted permissions and success-gated installer artifact
+PASS native installer source boundaries, CCX optionality and backup/restore hooks
+PASS PowerShell grammar checks (tree-sitter; no Windows execution)
+PENDING: real Inno compilation and installer smoke tests on a GitHub Windows runner
+PENDING: Adobe loading/editing/rendering and production Premiere CCX installation

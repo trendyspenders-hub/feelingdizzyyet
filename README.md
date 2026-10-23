@@ -2,14 +2,9 @@
 
 This project builds a real, unsigned Windows EXE on a GitHub-hosted Windows runner. You can set it up from your Mac. The native Inno Setup wizard replaces the previous CMD/VBScript installer.
 
-**Current status:** build configuration prepared; a target repository is still needed to run it. No compiled EXE or successful Windows CI run is claimed by this ZIP.
+**Current status:** Windows cloud build configured in this repository. Check Actions for the latest compilation and installer test result. Builds are unsigned; Adobe runtime validation remains pending.
 
-## Easiest next step
-Create an empty **private** GitHub repository named `feeling-dizzy-yet`, initialize it with a README, and send its URL back in the chat. If the connected GitHub app can access it, the prepared files can be committed there and the workflow started. If the repository is not visible, grant the ChatGPT GitHub app access in your GitHub installation settings. Repository creation itself is not available through the currently connected tools.
-
-Do not upload this project into an unrelated existing app repository. No existing repository has been changed.
-
-## Manual setup from your Mac, if preferred
+## Download the Windows build
 1. Create the private repository above. Private repositories keep this preview source out of public search. Check the GitHub account's available Actions quota; no paid service is enabled by this kit.
 2. Extract this build kit. In GitHub choose **Add file > Upload files** and upload its visible files and folders into the repository root, not the enclosing directory. Include installer, scripts, source, tests, packages, build-config.json and the guides.
 3. The actual workflow lives at `.github/workflows/windows-installer.yml`. Finder may hide `.github`; press **Command + Shift + period** to show hidden files. For a reliable browser-only alternative, use GitHub **Add file > Create new file**, enter `.github/workflows/windows-installer.yml`, and paste the contents of the visible `windows-installer.yml` copy included in this kit. Commit it to main.

@@ -1,0 +1,62 @@
+name: Build Feeling Dizzy Yet Windows installer
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'build/feeling-dizzy-yet-windows']
+    paths:
+      - '.github/workflows/windows-installer.yml'
+      - 'build-config.json'
+      - 'installer/**'
+      - 'scripts/**'
+      - 'source/**'
+      - 'packages/**'
+      - 'tests/**'
+permissions:
+  contents: read
+concurrency:
+  group: fdy-windows-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  installer:
+    name: Compile and test unsigned EXE
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build native Windows setup
+        shell: pwsh
+        run: ./scripts/Build-Windows.ps1
+      - name: Exercise install, update and uninstall in a temporary test profile location
+        shell: pwsh
+        run: ./scripts/Test-Installer.ps1
+      - name: Publish tested installer
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeelingDizzyYet-Windows-${{ github.run_number }}
+          path: |
+            dist/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Preserve diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeelingDizzyYet-Windows-Logs-${{ github.run_number }}
+          path: build/logs/*
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Explain the artifact
+        if: success()
+        shell: pwsh
+        run: |
+          @'
+          ## Feeling Dizzy Yet Windows setup
+          Download the artifact below this run. It contains the unsigned Setup.exe, SHA-256, build report and logs.
+          Native installation/update/uninstall was exercised with simulated AE preferences on this runner.
+          Adobe editing and Premiere CCX registration are NOT covered by that test.
+          See BUILD_REPORT.json for whether an Adobe-packaged Premiere CCX was supplied.
+          '@ >> $env:GITHUB_STEP_SUMMARY

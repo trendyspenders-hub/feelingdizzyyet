@@ -1,0 +1,7 @@
+build/
+dist/
+*.pfx
+*.p12
+*.pem
+*.key
+.DS_Store
