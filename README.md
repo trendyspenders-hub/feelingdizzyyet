@@ -19,6 +19,12 @@ Extract the artifact ZIP and run `FeelingDizzyYetSetup-0.8.1-unsigned.exe` on Wi
 
 The installer is unsigned. Adobe loading, actual editing/audio/rendering, desktop UI appearance and production Premiere CCX registration remain untested. A passing installer test is not Adobe compatibility certification.
 
+## Mac DMG and Apple signing
+
+[Mac unsigned-preview build](https://github.com/trendyspenders-hub/feelingdizzyyet/actions/runs/40030416277) passed compilation, native staged-copy/rollback tests and DMG integrity checks. It contains a universal Intel/Apple Silicon AE installer, the Premiere CCX, manual AE files and examples. It is not Apple Developer ID signed or notarized; actual Adobe editing remains untested.
+
+[Apple signing setup](macos/APPLE-SIGNING.md) explains the five GitHub Secrets needed from the account owner. Run **Build and sign Feeling Dizzy Yet Mac DMG** manually with **signed-notarized** only after adding them. Missing credentials or failed Apple checks stop the signed release; there is no silent unsigned fallback. The default and automatic mode is **unsigned-preview**.
+
 ## What gets installed
 
 The per-user Inno Setup wizard installs the After Effects panel and 102 numbered tools, with optional registration into an existing AE preferences version. Existing panel files are backed up; uninstall preserves a copy and attempts to restore the pre-install panel. The native installer does not use VBScript and does not request administrator elevation.
