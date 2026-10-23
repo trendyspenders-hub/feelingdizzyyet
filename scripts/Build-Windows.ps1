@@ -48,7 +48,7 @@ $html = '<!doctype html><meta charset="utf-8"><title>Feeling Dizzy Yet</title><s
 $ccx = Join-Path $root $config.ccxPath
 $hasCCX = Test-Path $ccx
 if ($hasCCX) {
-    # A ZIP renamed to .ccx is not sufficient. Supply an authentic UDT-created package.
+    # Validate the supplied CCX structure/identity. Adobe host validation is a separate acceptance test.
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $zip = [IO.Compression.ZipFile]::OpenRead($ccx)
     try {
@@ -93,10 +93,16 @@ Copy-Item (Join-Path $root 'NATIVE-INSTALL.md') $dist -Force
     exeSHA256 = $hash
     authenticode = 'NotSigned'
     premiereCCXIncluded = $hasCCX
-    premiereInstallMode = $(if ($hasCCX) { 'User opens authentic CCX in Adobe Creative Cloud; Adobe registration remains untested' } else { 'Developer source only; Adobe UXP Developer Tool required' })
+    premiereCCXSHA256 = $(if ($hasCCX) { (Get-FileHash $ccx -Algorithm SHA256).Hash.ToLowerInvariant() } else { $null })
+    premiereInstallMode = $(if ($hasCCX) { 'User opens included CCX in Adobe Creative Cloud; Adobe host validation and registration remain untested' } else { 'Developer source only; Adobe UXP Developer Tool required' })
     adobeRuntimeTested = $false
     compiler = (Get-Item $iscc).VersionInfo.FileVersion
     commit = $env:GITHUB_SHA
     builtAtUTC = [DateTime]::UtcNow.ToString('o')
 } | ConvertTo-Json | Set-Content (Join-Path $dist 'BUILD_REPORT.json') -Encoding utf8
+if ($hasCCX) {
+    Copy-Item $ccx $dist -Force
+    $packageReport = Join-Path $root 'packages/CCX_BUILD_REPORT.json'
+    if (Test-Path $packageReport) { Copy-Item $packageReport $dist -Force }
+}
 Write-Host "Compiled $exe"

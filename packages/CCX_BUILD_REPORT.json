@@ -1,0 +1,15 @@
+{
+  "pluginId": "studio.feelingdizzyyet.premiere",
+  "pluginVersion": "0.2.0",
+  "host": {
+    "app": "premierepro",
+    "minVersion": "25.6.0"
+  },
+  "packager": "Adobe open-source UXP PluginPackageCommand.package()",
+  "upstream": "https://github.com/adobe-uxp/devtools-cli",
+  "upstreamCommit": "ef7e127b0e234e82b94d94e0c18443f3a738f929",
+  "sha256": "757ac4565b02dc884bac9a5fad92dae43b7171e4910091bd19372e908074693b",
+  "strictAdobeHostValidation": false,
+  "adobeInstallTested": false,
+  "adobeEditingTested": false
+}

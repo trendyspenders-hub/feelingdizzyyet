@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/windows-installer.yml'
       - 'build-config.json'
+      - 'NATIVE-INSTALL.md'
       - 'installer/**'
       - 'scripts/**'
       - 'source/**'

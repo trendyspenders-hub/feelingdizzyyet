@@ -86,7 +86,7 @@ begin
         if (F.Name <> '.') and (F.Name <> '..') then begin
           if (F.Attributes and FILE_ATTRIBUTE_DIRECTORY) <> 0 then
             Good := CopyTree(Source + '\' + F.Name, Dest + '\' + F.Name)
-          else Good := FileCopy(Source + '\' + F.Name, Dest + '\' + F.Name, False);
+          else Good := CopyFile(Source + '\' + F.Name, Dest + '\' + F.Name, False);
           if not Good then Result := False;
         end;
       until not FindNext(F);
@@ -139,7 +139,7 @@ begin
   Backup := ExpandConstant('{localappdata}\FeelingDizzyYetBackups\') + GetDateTimeString('yyyymmdd-hhnnss', '-', ':');
   while DirExists(Backup) do Backup := Backup + '-next';
   Good := ForceDirectories(Backup);
-  if FileExists(Target + '\Feeling Dizzy Yet.jsx') then Good := FileCopy(Target + '\Feeling Dizzy Yet.jsx', Backup + '\Feeling Dizzy Yet.jsx', False) and Good;
+  if FileExists(Target + '\Feeling Dizzy Yet.jsx') then Good := CopyFile(Target + '\Feeling Dizzy Yet.jsx', Backup + '\Feeling Dizzy Yet.jsx', False) and Good;
   if DirExists(Target + '\FeelingDizzyYet') then Good := CopyTree(Target + '\FeelingDizzyYet', Backup + '\FeelingDizzyYet') and Good;
   if not Good then begin Result := 'Could not back up existing AE panel files. Installation stopped.'; exit; end;
   RegQueryStringValue(HKCU, StateKey, 'OriginalBackup', PriorBackup);
@@ -167,7 +167,7 @@ begin
     Saved := ExpandConstant('{localappdata}\FeelingDizzyYetBackups\removed-') + GetDateTimeString('yyyymmdd-hhnnss', '-', ':');
     while DirExists(Saved) do Saved := Saved + '-next';
     Good := ForceDirectories(Saved);
-    if FileExists(InstalledTarget + '\Feeling Dizzy Yet.jsx') then Good := FileCopy(InstalledTarget + '\Feeling Dizzy Yet.jsx', Saved + '\Feeling Dizzy Yet.jsx', False) and Good;
+    if FileExists(InstalledTarget + '\Feeling Dizzy Yet.jsx') then Good := CopyFile(InstalledTarget + '\Feeling Dizzy Yet.jsx', Saved + '\Feeling Dizzy Yet.jsx', False) and Good;
     if DirExists(InstalledTarget + '\FeelingDizzyYet') then Good := CopyTree(InstalledTarget + '\FeelingDizzyYet', Saved + '\FeelingDizzyYet') and Good;
     if not Good then RaiseException('Could not preserve AE files before uninstall. Uninstall stopped.');
   end;
@@ -175,7 +175,7 @@ begin
     Good := True;
     if (RestorePath <> '') and (InstalledTarget <> '') then begin
       Good := ForceDirectories(InstalledTarget);
-      if FileExists(RestorePath + '\Feeling Dizzy Yet.jsx') then Good := FileCopy(RestorePath + '\Feeling Dizzy Yet.jsx', InstalledTarget + '\Feeling Dizzy Yet.jsx', False) and Good;
+      if FileExists(RestorePath + '\Feeling Dizzy Yet.jsx') then Good := CopyFile(RestorePath + '\Feeling Dizzy Yet.jsx', InstalledTarget + '\Feeling Dizzy Yet.jsx', False) and Good;
       if DirExists(RestorePath + '\FeelingDizzyYet') then Good := CopyTree(RestorePath + '\FeelingDizzyYet', InstalledTarget + '\FeelingDizzyYet') and Good;
     end;
     if Good then RegDeleteKeyIncludingSubkeys(HKCU, StateKey)

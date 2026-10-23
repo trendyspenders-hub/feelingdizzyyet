@@ -1,5 +1,5 @@
 {
-  "installerVersion": "0.8.0",
+  "installerVersion": "0.8.1",
   "sourceArchive": "source/Feeling_Dizzy_Yet_Windows_Installer.zip",
   "sourceSHA256": "cfba00ba62ef05384bfdc9dce7aff2cc7dadfa9a3b6c06d6c781071ce317d1c3",
   "ccxPath": "packages/FeelingDizzyYet-Premiere.ccx"

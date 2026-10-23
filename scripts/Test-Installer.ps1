@@ -32,6 +32,13 @@ try {
     Require (Test-Path (Join-Path $target 'Premiere Edition/plugin/manifest.json')) 'Premiere source missing.'
     Require (Test-Path (Join-Path $panelDir 'FeelingDizzyYet/scripts/102_Automatic_Multicam_Editor.jsx')) 'AE native multicam missing.'
     Require ((Get-Content (Join-Path $panelDir 'Feeling Dizzy Yet.jsx') -Raw) -match 'Automatic Multicam') 'Wrong AE panel installed.'
+    $sourceCCX = Join-Path $root $config.ccxPath
+    if (Test-Path $sourceCCX) {
+        $installedCCX = Join-Path $target 'Premiere Edition/FeelingDizzyYet-Premiere.ccx'
+        Require (Test-Path $installedCCX) 'Premiere CCX missing from native installation.'
+        Require ((Get-FileHash $installedCCX).Hash -eq (Get-FileHash $sourceCCX).Hash) 'Installed Premiere CCX checksum mismatch.'
+        Write-Host 'PASS: included CCX copied byte-for-byte; Adobe registration not exercised.'
+    }
     $backup = (Get-ItemProperty $reg).OriginalBackup
     Require ((Get-Content (Join-Path $backup 'Feeling Dizzy Yet.jsx') -Raw) -match 'original-before-native-setup') 'Original AE panel backup missing.'
     $results.Add('PASS: fresh EXE install copied runtime, registered test AE panel and preserved original files.')
