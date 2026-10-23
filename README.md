@@ -4,11 +4,11 @@ Native Windows installer and Adobe editing tools.
 
 ## Download the Windows installer
 
-**[Download the successful Windows build](https://github.com/trendyspenders-hub/feelingdizzyyet/actions/runs/40028399363/artifacts/12533004367)**
+**[Download the successful Windows build](https://github.com/trendyspenders-hub/feelingdizzyyet/actions/runs/40029545289/artifacts/12534107837)**
 
-Extract the artifact ZIP and run `FeelingDizzyYetSetup-0.8.0-unsigned.exe` on Windows. It includes installation notes, SHA-256 checksums, a build report and installer test results. GitHub artifact downloads require signing in and this artifact expires November 6, 2026. Run the workflow again to generate a new artifact.
+Extract the artifact ZIP and run `FeelingDizzyYetSetup-0.8.1-unsigned.exe` on Windows. It includes installation notes, SHA-256 checksums, a build report and installer test results. GitHub artifact downloads require signing in and this artifact expires November 6, 2026. Run the workflow again to generate a new artifact.
 
-**[View the successful build and logs](https://github.com/trendyspenders-hub/feelingdizzyyet/actions/runs/40028399363)**
+**[View the successful build and logs](https://github.com/trendyspenders-hub/feelingdizzyyet/actions/runs/40029545289)**
 
 ## Verified on the GitHub Windows runner
 
@@ -23,7 +23,7 @@ The installer is unsigned. Adobe loading, actual editing/audio/rendering, deskto
 
 The per-user Inno Setup wizard installs the After Effects panel and 102 numbered tools, with optional registration into an existing AE preferences version. Existing panel files are backed up; uninstall preserves a copy and attempts to restore the pre-install panel. The native installer does not use VBScript and does not request administrator elevation.
 
-Premiere currently includes developer source for host 25.6+, loaded through Adobe UXP Developer Tool. This build contains no production CCX. To include one, package the Premiere source through Adobe UXP Developer Tool on a Mac or Windows machine and add the authentic file at `packages/FeelingDizzyYet-Premiere.ccx`. The EXE can then offer to open it in Adobe Creative Cloud; the user completes Adobe's prompts. It does not silently register source as a plugin.
+Premiere includes FeelingDizzyYet-Premiere.ccx, generated using Adobe's unmodified open-source UXP packaging code. The artifact ZIP includes the standalone CCX, and the Windows EXE also installs it. On Mac, open the CCX in Adobe Creative Cloud. On Windows, select the optional finish-page action or open the installed CCX. Complete Adobe's prompts, then restart Premiere and check Window > UXP Plugins. Actual Adobe installation remains untested; packaging is not Adobe certification. See packages/CCX_BUILD_REPORT.json for provenance and host-validation limits.
 
 Automatic Multicam Editor runs inside Adobe. Premiere creates editable segments by internal XML import; AE creates timed cuts in a duplicate composition. Cameras and isolated microphone WAVs must already be synchronized. Output is a first-pass edit, not native switchable multicam angles. No live Claude/OpenAI connection is included.
 
